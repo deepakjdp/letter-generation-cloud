@@ -34,15 +34,17 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 2: Building Spring Boot Backend'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Java Version:"
-                        java -version
-                        echo "Maven Version:"
-                        mvn -version
-                        echo "Building backend..."
-                        mvn clean compile -DskipTests
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Java Version:"
+                            java -version
+                            echo "Maven Version:"
+                            mvn -version
+                            echo "Building backend..."
+                            mvn clean compile -DskipTests
+                        '''
+                    }
                 }
             }
         }
@@ -52,22 +54,24 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 3: Running Backend Tests'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Running JUnit tests with JaCoCo coverage..."
-                        mvn test jacoco:report
-                        echo "Tests completed!"
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Running JUnit tests with JaCoCo coverage..."
+                            mvn test
+                            echo "Tests completed!"
+                        '''
+                    }
                 }
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit 'backend/target/surefire-reports/*.xml'
                     jacoco(
-                        execPattern: '**/target/jacoco.exec',
-                        classPattern: '**/target/classes',
-                        sourcePattern: '**/src/main/java',
-                        exclusionPattern: '**/SpringBootAngularApplication.class'
+                        execPattern: 'backend/target/jacoco.exec',
+                        classPattern: 'backend/target/classes',
+                        sourcePattern: 'backend/src/main/java',
+                        exclusionPattern: '**/LetterGenApplication.class'
                     )
                 }
             }
@@ -78,14 +82,16 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 4: Running Backend SonarQube Analysis'
                 echo '=========================================='
-                script {
-                    withSonarQubeEnv('SonarQube') {
-                        sh '''
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=springboot-angular-app \
-                                -Dsonar.host.url=${SONAR_HOST_URL} \
-                                -Dsonar.login=${SONAR_TOKEN}
-                        '''
+                dir('backend') {
+                    script {
+                        withSonarQubeEnv('SonarQube') {
+                            sh '''
+                                mvn sonar:sonar \
+                                    -Dsonar.projectKey=letter-gen-backend \
+                                    -Dsonar.host.url=${SONAR_HOST_URL} \
+                                    -Dsonar.login=${SONAR_TOKEN}
+                            '''
+                        }
                     }
                 }
             }
@@ -96,27 +102,29 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 5: SAST - OWASP Dependency Check'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Running OWASP Dependency Check for security vulnerabilities..."
-                        
-                        # Check if dependency-check is installed
-                        if command -v dependency-check &> /dev/null; then
-                            dependency-check --project "SpringBoot-Angular-App" \
-                                --scan . \
-                                --format HTML \
-                                --format JSON \
-                                --out ./dependency-check-report \
-                                --suppression dependency-check-suppressions.xml || true
-                        else
-                            echo "Installing OWASP Dependency Check..."
-                            mvn org.owasp:dependency-check-maven:check \
-                                -DfailBuildOnCVSS=7 \
-                                -DsuppressionFiles=dependency-check-suppressions.xml || true
-                        fi
-                        
-                        echo "Dependency Check completed!"
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Running OWASP Dependency Check for security vulnerabilities..."
+                            
+                            # Check if dependency-check is installed
+                            if command -v dependency-check &> /dev/null; then
+                                dependency-check --project "Letter-Gen-Backend" \
+                                    --scan . \
+                                    --format HTML \
+                                    --format JSON \
+                                    --out ./dependency-check-report \
+                                    --suppression dependency-check-suppressions.xml || true
+                            else
+                                echo "Installing OWASP Dependency Check..."
+                                mvn org.owasp:dependency-check-maven:check \
+                                    -DfailBuildOnCVSS=7 \
+                                    -DsuppressionFiles=dependency-check-suppressions.xml || true
+                            fi
+                            
+                            echo "Dependency Check completed!"
+                        '''
+                    }
                 }
             }
             post {
@@ -125,7 +133,7 @@ pipeline {
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'target',
+                        reportDir: 'backend/target',
                         reportFiles: 'dependency-check-report.html',
                         reportName: 'OWASP Dependency Check Report'
                     ])
@@ -138,20 +146,22 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 6: SAST - Security Code Analysis'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Running additional SAST security scans..."
-                        
-                        # SpotBugs for Java security issues
-                        echo "Running SpotBugs security analysis..."
-                        mvn compile spotbugs:check -Dspotbugs.failOnError=false || true
-                        
-                        # PMD for code quality and security
-                        echo "Running PMD security analysis..."
-                        mvn pmd:check -Dpmd.failOnViolation=false || true
-                        
-                        echo "SAST Security scanning completed!"
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Running additional SAST security scans..."
+                            
+                            # SpotBugs for Java security issues
+                            echo "Running SpotBugs security analysis..."
+                            mvn compile spotbugs:check -Dspotbugs.failOnError=false || true
+                            
+                            # PMD for code quality and security
+                            echo "Running PMD security analysis..."
+                            mvn pmd:check -Dpmd.failOnViolation=false || true
+                            
+                            echo "SAST Security scanning completed!"
+                        '''
+                    }
                 }
             }
             post {
@@ -161,7 +171,7 @@ pipeline {
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'target/spotbugs',
+                        reportDir: 'backend/target/spotbugs',
                         reportFiles: 'spotbugsXml.html',
                         reportName: 'SpotBugs Security Report'
                     ])
@@ -185,17 +195,19 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 8: Packaging Spring Boot Application'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Creating JAR file..."
-                        mvn package -DskipTests
-                        echo "JAR created: target/springboot-angular-app-1.0.0.jar"
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Creating JAR file..."
+                            mvn package -DskipTests
+                            echo "JAR created: target/letter-gen-backend.jar"
+                        '''
+                    }
                 }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
                 }
             }
         }
@@ -205,34 +217,36 @@ pipeline {
                 echo '=========================================='
                 echo 'Stage 9: DAST - Deploy Application for Testing'
                 echo '=========================================='
-                script {
-                    sh '''
-                        echo "Starting Spring Boot application for DAST testing..."
-                        
-                        # Kill any existing instance
-                        pkill -f "springboot-angular-app" || true
-                        
-                        # Start application in background
-                        nohup java -jar target/springboot-angular-app-1.0.0.jar > app.log 2>&1 &
-                        APP_PID=$!
-                        echo $APP_PID > app.pid
-                        
-                        echo "Application PID: $APP_PID"
-                        echo "Waiting for application to start..."
-                        
-                        # Wait for application to be ready (max 60 seconds)
-                        for i in {1..30}; do
-                            if curl -s http://localhost:8080/actuator/health > /dev/null 2>&1 || \
-                               curl -s http://localhost:8080 > /dev/null 2>&1; then
-                                echo "Application is ready!"
-                                break
-                            fi
-                            echo "Waiting... ($i/30)"
-                            sleep 2
-                        done
-                        
-                        echo "Application started on http://localhost:8080"
-                    '''
+                dir('backend') {
+                    script {
+                        sh '''
+                            echo "Starting Spring Boot application for DAST testing..."
+                            
+                            # Kill any existing instance
+                            pkill -f "letter-gen-backend" || true
+                            
+                            # Start application in background
+                            nohup java -jar target/letter-gen-backend.jar > app.log 2>&1 &
+                            APP_PID=$!
+                            echo $APP_PID > app.pid
+                            
+                            echo "Application PID: $APP_PID"
+                            echo "Waiting for application to start..."
+                            
+                            # Wait for application to be ready (max 60 seconds)
+                            for i in {1..30}; do
+                                if curl -s http://localhost:8080/actuator/health > /dev/null 2>&1 || \
+                                   curl -s http://localhost:8080/api/letters/templates > /dev/null 2>&1; then
+                                    echo "Application is ready!"
+                                    break
+                                fi
+                                echo "Waiting... ($i/30)"
+                                sleep 2
+                            done
+                            
+                            echo "Application started on http://localhost:8080"
+                        '''
+                    }
                 }
             }
         }
@@ -307,15 +321,17 @@ pipeline {
                     ])
                     
                     // Stop the application
-                    sh '''
-                        if [ -f app.pid ]; then
-                            APP_PID=$(cat app.pid)
-                            echo "Stopping application (PID: $APP_PID)..."
-                            kill $APP_PID || true
-                            rm app.pid
-                        fi
-                        pkill -f "springboot-angular-app" || true
-                    '''
+                    dir('backend') {
+                        sh '''
+                            if [ -f app.pid ]; then
+                                APP_PID=$(cat app.pid)
+                                echo "Stopping application (PID: $APP_PID)..."
+                                kill $APP_PID || true
+                                rm app.pid
+                            fi
+                            pkill -f "letter-gen-backend" || true
+                        '''
+                    }
                 }
             }
         }
@@ -385,7 +401,7 @@ pipeline {
             echo '  - Dynamic Security Testing: Completed'
             echo ''
             echo '📦 Artifacts:'
-            echo '  - JAR: target/springboot-angular-app-1.0.0.jar'
+            echo '  - JAR: backend/target/letter-gen-backend.jar'
             echo ''
             echo '✨ Security Testing Summary:'
             echo '  ✓ Static Analysis (SAST) - Completed'
