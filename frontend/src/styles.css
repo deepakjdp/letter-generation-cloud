@@ -1,0 +1,194 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  color: #333333;
+}
+
+.login-body {
+  background: linear-gradient(135deg, #1b4f72, #2874a6);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  width: 360px;
+  margin: 0;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+}
+
+.form-row {
+  margin-bottom: 15px;
+}
+
+.form-row label,
+.form-row input,
+.form-row select,
+.form-row textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  padding: 10px;
+  border: 1px solid #cfd6de;
+  border-radius: 4px;
+}
+
+button,
+.btn-primary {
+  background: #1f618d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-container .btn-primary {
+  width: auto;
+  min-width: 96px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #1f2d3d;
+  color: #ffffff;
+  padding: 20px 0;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin-top: 0;
+  padding: 0 15px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.sidebar a,
+.sidebar .sidebar-link {
+  display: block;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 12px 20px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.sidebar a:hover,
+.sidebar .sidebar-link:hover {
+  background: #2f4053;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid #dfe6ee;
+  padding: 10px;
+  text-align: left;
+}
+
+.data-table th {
+  background: #eef3f8;
+}
+
+.hint {
+  color: #777777;
+  font-size: 12px;
+}
+
+.required-mark {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.message-success {
+  color: #1e8449;
+  font-weight: bold;
+}
+
+.message-error {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.dependent-table input {
+  width: 100%;
+  min-width: 120px;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action-row button,
+.dependent-table button {
+  width: auto;
+}
+
+.dependent-table {
+  margin-bottom: 16px;
+}
+
+.address-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.address-grid .form-row {
+  flex: 1;
+}
+
+.preview-card {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #dfe6ee;
+  border-radius: 6px;
+  background: #fafcff;
+}
+
+.preview-frame {
+  width: 100%;
+  min-height: 500px;
+  border: 1px solid #cfd6de;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+/* Made with Bob */

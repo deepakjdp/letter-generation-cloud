@@ -1,0 +1,23 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: letter-gen-backend
+
+logging:
+  file:
+    path: ${LOG_PATH:backend/logs}
+  level:
+    root: INFO
+    com.hlgs.lettergen: INFO
+
+app:
+  storage:
+    base-directory: ./data/generated-letters
+    metadata-file-name: letters-index.csv
+  cors:
+    allowed-origins:
+      - http://localhost:4200
+
+# Made with Bob

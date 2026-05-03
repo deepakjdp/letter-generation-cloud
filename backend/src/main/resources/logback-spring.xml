@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="letter-gen-backend"/>
+    <springProperty scope="context" name="LOG_DIR" source="logging.file.path" defaultValue="backend/logs"/>
+    <property name="ENVIRONMENT" value="${ENVIRONMENT:-local}"/>
+
+    <property name="LOG_FILE" value="${LOG_DIR}/application.log"/>
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appName":"${APP_NAME}","logType":"application","environment":"${ENVIRONMENT}"}</customFields>
+            <includeMdc>true</includeMdc>
+        </encoder>
+    </appender>
+
+    <appender name="JSON_ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appName":"${APP_NAME}","logType":"application","environment":"${ENVIRONMENT}"}</customFields>
+            <includeMdc>true</includeMdc>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="com.hlgs.lettergen" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE"/>
+        <appender-ref ref="JSON_ROLLING_FILE"/>
+    </root>
+
+</configuration>
+
+<!-- Made with Bob -->

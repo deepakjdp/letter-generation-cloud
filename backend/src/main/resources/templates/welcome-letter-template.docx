@@ -1,0 +1,47 @@
+ABC Inc. Healthcare
+
+@address
+
+@city, @zipcode
+
+Subject: Welcome to ABC Inc. Healthcare
+
+Dear Member,
+
+Welcome to ABC Inc. Healthcare.
+
+We are pleased to inform you that new family member(s) have been added to your healthcare plan. Please review the dependent details below for your records.
+
+Dependent Information
+
+Member Name
+
+Enrollment Date
+
+PCP Name
+
+Location
+
+@memberName
+
+@enrollmentDate
+
+@pcpName
+
+@location
+
+Contractual Agreement
+
+By enrolling dependent family member(s) under your health plan with ABC Inc. Healthcare, you acknowledge and agree to the terms, conditions, limitations, and provisions of coverage as outlined in your policy documents and membership agreement.
+
+Coverage for enrolled dependents is subject to eligibility verification, plan benefits, provider network availability, and applicable policy rules. It is your responsibility to review all plan materials carefully and ensure that the information provided during enrollment is accurate and complete.
+
+Please retain this letter for your records. For complete details regarding benefits, exclusions, claim procedures, and member responsibilities, please refer to your official plan documents or contact ABC Inc. Healthcare Member Services.
+
+Signature
+
+Sincerely,
+
+ABC Inc. Healthcare
+
+Member Services Team
