@@ -9,7 +9,7 @@ pipeline {
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_TOKEN = credentials('sonar-token')
-        JAVA_HOME = tool 'JDK 17'
+        JAVA_HOME = tool 'JDK 21'
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
         // OWASP Dependency Check
         DEPENDENCY_CHECK_HOME = '/opt/dependency-check'
