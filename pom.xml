@@ -7,8 +7,8 @@
     <groupId>com.hlgs</groupId>
     <artifactId>letter-gen-modernized</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>HLGS Letter Generation Modernized</name>
-    <description>Spring Boot modernization for HLGS letter generation demo</description>
+    <name>Letter Generation Modernized</name>
+    <description>Spring Boot modernization for letter generation demo</description>
     <packaging>pom</packaging>
 
     <modules>
