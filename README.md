@@ -1,4 +1,4 @@
-# HLGS Letter Generation Modernization
+# Letter Generation Modernization
 
 ## Current modernization status
 - Spring Boot backend scaffolded in `backend/`
