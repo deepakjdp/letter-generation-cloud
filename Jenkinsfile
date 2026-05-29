@@ -8,7 +8,7 @@ pipeline {
     
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('sonar-token_new')
         JAVA_HOME = tool 'JDK 21'
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
         // OWASP Dependency Check
@@ -86,7 +86,7 @@ pipeline {
             steps {
                 echo '=========================================='
                 echo 'Stage 4: Running Backend SonarQube Analysis'
-                echo '==========================================${SONAR_TOKEN}'
+                echo '==========================================$'${SONAR_TOKEN}'
                 dir('backend') {
                     script {
                         try {
