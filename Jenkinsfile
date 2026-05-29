@@ -86,7 +86,7 @@ pipeline {
             steps {
                 echo '=========================================='
                 echo 'Stage 4: Running Backend SonarQube Analysis'
-                echo '==========================================$'${SONAR_TOKEN}'
+                echo '==========================================$'
                 dir('backend') {
                     script {
                         try {
